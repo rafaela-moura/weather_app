@@ -1,7 +1,9 @@
+import 'package:converter/converter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather_app/utils/app_palette.dart';
 import 'package:weather_app/utils/routes.dart';
+import 'package:weather_app/view/base_view.dart';
 import 'package:weather_app/view_model/home_view_model.dart';
 
 class HomeView extends StatefulWidget {
@@ -13,190 +15,193 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   bool click = false;
-  HomeViewModel homeViewModel = HomeViewModel();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppPalette.blue,
-                    AppPalette.blue,
-                    AppPalette.primary,
-                  ],
-                ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).viewPadding.top,
+    return BaseView(
+      model: HomeViewModel(),
+      onModelReady: (model) => model.onInit(context),
+      builder: (context, model, child) => Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppPalette.blue,
+                      AppPalette.blue,
+                      AppPalette.primary,
+                    ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 258,
-                            child: Form(
-                              key: homeViewModel.formKey,
-                              child: TextFormField(
-                                initialValue: homeViewModel.city,
-                                style: TextStyle(color: AppPalette.gray),
-                                onChanged: (value) {
-                                  setState(() {
-                                    homeViewModel.setCity(value);
-                                  });
-                                },
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).viewPadding.top,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 258,
+                              child: Form(
+                                key: model.formKey,
+                                child: TextFormField(
+                                  initialValue: model.city,
+                                  style: TextStyle(color: AppPalette.gray),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      model.setCity(value);
+                                    });
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            color: AppPalette.gray,
-                            height: 1,
-                            width: 258,
+                            Container(
+                              color: AppPalette.gray,
+                              height: 1,
+                              width: 258,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacementNamed(
+                                  context, RoutesApp.LOCATION);
+                            },
+                            child: SvgPicture.asset('assets/icons/city.svg')),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Container(
+                      height: 380,
+                      width: 323,
+                      decoration: BoxDecoration(
+                        color: AppPalette.blue.withOpacity(0.75),
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppPalette.primary.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
-                      const SizedBox(width: 10),
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(
-                                context, RoutesApp.LOCATION);
-                          },
-                          child: SvgPicture.asset('assets/icons/city.svg')),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Container(
-                    height: 380,
-                    width: 323,
-                    decoration: BoxDecoration(
-                      color: AppPalette.blue.withOpacity(0.75),
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppPalette.primary.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/images/sunny.png",
+                              fit: BoxFit.cover),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                model.getTemp().toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 67,
+                                    color: AppPalette.white.withOpacity(0.75)),
+                              ),
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                        color: AppPalette.white
+                                            .withOpacity(0.75))),
+                              )
+                            ],
+                          ),
+                          Text(
+                            'Cloudy',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 17,
+                                color: AppPalette.white.withOpacity(0.75)),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Text(
+                            'Today',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18,
+                                fontFamily: 'Days One',
+                                color: AppPalette.white.withOpacity(0.75)),
+                          ),
+                          Text(
+                            'Lucknow',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                fontFamily: 'Barlow',
+                                color: AppPalette.white.withOpacity(0.75)),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
                       children: [
-                        Image.asset("assets/images/sunny.png",
-                            fit: BoxFit.cover),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              // resolvendo o caminho para aparecer as coisas.
-                              homeViewModel.together?.information!.tempMax.toString() ?? '',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 67,
-                                  color: AppPalette.white.withOpacity(0.75)),
-                            ),
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                      color:
-                                          AppPalette.white.withOpacity(0.75))),
-                            )
-                          ],
-                        ),
-                        Text(
-                          'Cloudy',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
-                              color: AppPalette.white.withOpacity(0.75)),
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        Text(
-                          'Today',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 18,
-                              fontFamily: 'Days One',
-                              color: AppPalette.white.withOpacity(0.75)),
-                        ),
-                        Text(
-                          'Lucknow',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              fontFamily: 'Barlow',
-                              color: AppPalette.white.withOpacity(0.75)),
-                        ),
+                        _buildForecastingDays(),
+                        _buildForecastingDays(),
+                        _buildForecastingDays(),
+                        _buildForecastingDays(),
                       ],
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      _buildForecastingDays(),
-                      _buildForecastingDays(),
-                      _buildForecastingDays(),
-                      _buildForecastingDays(),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            _buildButton(
-                                'assets/icons/eye.svg', 'Visibility', "1000 m"),
-                            SizedBox(width: 5),
-                            _buildButton(
-                                'assets/icons/wind.svg', 'Wind', "7 km\nN-E"),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: [
-                            _buildButton(
-                                'assets/icons/drop.svg', 'Humidity', "21%"),
-                            SizedBox(width: 5),
-                            _buildButton(
-                                'assets/icons/sun.svg', 'UV', "7\nStrong"),
-                          ],
-                        )
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              _buildButton('assets/icons/eye.svg', 'Visibility',
+                                  "1000 m"),
+                              SizedBox(width: 5),
+                              _buildButton(
+                                  'assets/icons/wind.svg', 'Wind', "7 km\nN-E"),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            children: [
+                              _buildButton(
+                                  'assets/icons/drop.svg', 'Humidity', "21%"),
+                              SizedBox(width: 5),
+                              _buildButton(
+                                  'assets/icons/sun.svg', 'UV', "7\nStrong"),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
