@@ -48,21 +48,10 @@ class _HomeViewState extends State<HomeView> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              height: 40,
-                              width: 258,
-                              child: Form(
-                                key: model.formKey,
-                                child: TextFormField(
-                                  initialValue: model.city,
-                                  style: TextStyle(color: AppPalette.gray),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      model.setCity(value);
-                                    });
-                                  },
-                                ),
-                              ),
+                            Text(
+                              model.city,
+                              style: TextStyle(
+                                  color: AppPalette.gray, fontSize: 12),
                             ),
                             Container(
                               color: AppPalette.gray,

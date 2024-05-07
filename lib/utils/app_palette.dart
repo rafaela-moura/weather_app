@@ -8,4 +8,5 @@ class AppPalette {
   static const gray2 = Color(0XFF171717);
   static const white = Color(0XFFFFFFFFBF);
   static const gray3 = Color(0XFFF797979);
+  static const gray4 = Color(0XFFFD9D9D9);
 }
